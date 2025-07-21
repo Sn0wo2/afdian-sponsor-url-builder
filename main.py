@@ -3,7 +3,7 @@ import urllib.parse
 import pyperclip
 
 def get_user_id(slug):
-    api_url = f"https://afdian.com/api/user/get-profile-by-slug?url_slug={slug}"
+    api_url = f"https://afdian.com/api/user/get-profile-by-slug?url_slug={urllib.parse.quote(slug)}"
     try:
         response = requests.get(api_url)
         response.raise_for_status()
@@ -18,7 +18,7 @@ def get_user_id(slug):
         return None
 
 def build_sponsor_url(user_id, remark):
-    return f"https://afdian.com/order/create?user_id={user_id}&remark={urllib.parse.quote(remark)}"
+    return f"https://afdian.com/order/create?user_id={urllib.parse.quote(user_id)}&remark={urllib.parse.quote(remark)}"
 
 def main():
     slug_input = input("Please input your afdian user name: ")
@@ -28,8 +28,7 @@ def main():
     user_id = get_user_id(slug_input)
     if user_id:
         print(f"Successfully fetched User ID: {user_id}")
-        remark_input = input("Please input your remark: ")
-        sponsor_url = build_sponsor_url(user_id, remark_input)
+        sponsor_url = build_sponsor_url(user_id, input("Please input your remark: "))
         pyperclip.copy(sponsor_url)
         print("\nYour sponsor url has been copied to the clipboard:")
         print(sponsor_url)
